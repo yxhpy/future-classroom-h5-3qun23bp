@@ -1,0 +1,35 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'>
+  <defs>
+    <filter id='shadow-exc' x='-20%' y='-20%' width='140%' height='140%'>
+      <feDropShadow dx='0' dy='5' stdDeviation='5' flood-opacity='0.15'/>
+    </filter>
+  </defs>
+  <g filter='url(#shadow-exc)'>
+    <!-- Body/Hoodie -->
+    <path d='M65 120 Q100 100 135 120 L145 240 L55 240 Z' fill='#ed8936'/>
+    <!-- Hood detail -->
+    <path d='M75 120 Q100 140 125 120' fill='none' stroke='#dd6b20' stroke-width='6' stroke-linecap='round'/>
+    <!-- Neck -->
+    <rect x='90' y='95' width='20' height='20' fill='#ffe5d9'/>
+    <!-- Head -->
+    <circle cx='100' cy='70' r='35' fill='#ffe5d9'/>
+    <!-- Hair -->
+    <path d='M62 70 Q70 20 110 30 Q130 40 135 75 Q125 45 100 45 Q75 45 62 70 Z' fill='#744210'/>
+    <!-- Eyes > < -->
+    <path d='M78 65 L88 60 L78 55' fill='none' stroke='#2d3748' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/>
+    <path d='M122 65 L112 60 L122 55' fill='none' stroke='#2d3748' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/>
+    <!-- Blushes -->
+    <ellipse cx='75' cy='72' rx='6' ry='4' fill='#ffb5a7' opacity='0.8'/>
+    <ellipse cx='125' cy='72' rx='6' ry='4' fill='#ffb5a7' opacity='0.8'/>
+    <!-- Open Mouth -->
+    <path d='M90 80 Q100 100 110 80 Z' fill='#c53030'/>
+    <!-- Arms Raised -->
+    <path d='M65 125 Q40 90 30 50' fill='none' stroke='#ed8936' stroke-width='16' stroke-linecap='round'/>
+    <circle cx='30' cy='50' r='8' fill='#ffe5d9'/>
+    <path d='M135 125 Q160 90 170 50' fill='none' stroke='#ed8936' stroke-width='16' stroke-linecap='round'/>
+    <circle cx='170' cy='50' r='8' fill='#ffe5d9'/>
+    <!-- Sparkles -->
+    <path d='M25 25 L30 15 L35 25 L45 30 L35 35 L30 45 L25 35 L15 30 Z' fill='#fbd38d'/>
+    <path d='M165 25 L170 15 L175 25 L185 30 L175 35 L170 45 L165 35 L155 30 Z' fill='#fbd38d'/>
+  </g>
+</svg>

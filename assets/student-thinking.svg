@@ -1,0 +1,36 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'>
+  <defs>
+    <filter id='shadow-thk' x='-20%' y='-20%' width='140%' height='140%'>
+      <feDropShadow dx='0' dy='5' stdDeviation='5' flood-opacity='0.15'/>
+    </filter>
+  </defs>
+  <g filter='url(#shadow-thk)'>
+    <!-- Body/Shirt -->
+    <path d='M65 120 Q100 110 135 120 L140 240 L60 240 Z' fill='#319795'/>
+    <!-- Collar -->
+    <path d='M85 117 L100 135 L115 117 Z' fill='#e6fffa'/>
+    <!-- Neck -->
+    <rect x='90' y='95' width='20' height='20' fill='#fcd5ce'/>
+    <!-- Head -->
+    <circle cx='100' cy='70' r='35' fill='#fcd5ce'/>
+    <!-- Hair -->
+    <path d='M65 70 Q60 25 105 25 Q135 25 135 70 Q125 50 100 50 Q75 50 65 70 Z' fill='#2c5282'/>
+    <path d='M100 25 Q110 10 115 25' fill='none' stroke='#2c5282' stroke-width='4' stroke-linecap='round'/>
+    <!-- Eyes Looking Up Left -->
+    <circle cx='85' cy='65' r='8' fill='#ffffff'/>
+    <circle cx='82' cy='63' r='4' fill='#2d3748'/>
+    <circle cx='115' cy='65' r='8' fill='#ffffff'/>
+    <circle cx='112' cy='63' r='4' fill='#2d3748'/>
+    <!-- Thinking Mouth -->
+    <path d='M93 85 Q97 82 100 85' fill='none' stroke='#2d3748' stroke-width='2' stroke-linecap='round'/>
+    <!-- Arm Hand on Chin -->
+    <path d='M65 130 Q40 160 70 180 Q85 180 85 95' fill='none' stroke='#319795' stroke-width='16' stroke-linecap='round'/>
+    <circle cx='85' cy='95' r='9' fill='#fcd5ce'/>
+    <!-- Arm Right Relaxed -->
+    <path d='M135 130 Q150 160 145 200' fill='none' stroke='#319795' stroke-width='16' stroke-linecap='round'/>
+    <circle cx='145' cy='200' r='9' fill='#fcd5ce'/>
+    <!-- Question Bubble -->
+    <path d='M140 30 Q170 10 185 30 Q200 55 175 75 Q160 85 145 70 L135 30 Z' fill='#ffffff' stroke='#ed8936' stroke-width='3'/>
+    <text x='155' y='60' font-family='sans-serif' font-weight='bold' font-size='24' fill='#ed8936'>?</text>
+  </g>
+</svg>
