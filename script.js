@@ -1,139 +1,178 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const slides = document.querySelectorAll('.slide');
-  const btnPrev = document.getElementById('btn-prev');
-  const btnNext = document.getElementById('btn-next');
-  const btnFull = document.getElementById('btn-full');
-  const pageCurrent = document.getElementById('current-page');
-  const pageTotal = document.getElementById('total-pages');
-  const progressBar = document.getElementById('progress-bar');
-  const presentation = document.getElementById('presentation');
-  
-  let currentIndex = 0;
-  const totalSlides = slides.length;
-  let isAnimating = false;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const btnFull = document.getElementById('btn-full');
+const pageCurrent = document.getElementById('current-page');
+const pageTotal = document.getElementById('total-pages');
+const progressBar = document.getElementById('progress-bar');
+const sideDots = document.getElementById('side-dots');
 
-  // 初始化 UI
-  pageTotal.textContent = totalSlides;
-  updateUI();
+let currentIndex = 0;
+let isAnimating = false;
+let wheelLock = false;
+let touchStartX = 0;
 
-  // 核心切换逻辑
-  function goToSlide(index) {
-    if (isAnimating || index === currentIndex) return;
-    if (index < 0 || index >= totalSlides) return;
-
-    isAnimating = true;
-    
-    // 移除所有状态
-    slides.forEach(slide => {
-      slide.classList.remove('active', 'prev-slide');
-    });
-
-    // 为之前的幻灯片添加 prev-slide 类，制造层级动画差异
-    if (index > currentIndex) {
-      slides[currentIndex].classList.add('prev-slide');
-    }
-
-    currentIndex = index;
-    slides[currentIndex].classList.add('active');
-    
-    updateUI();
-
-    // 动画锁，与 CSS transition 时间匹配
-    setTimeout(() => {
-      isAnimating = false;
-    }, 800); 
-  }
-
-  function nextSlide() {
-    if (currentIndex < totalSlides - 1) goToSlide(currentIndex + 1);
-  }
-
-  function prevSlide() {
-    if (currentIndex > 0) goToSlide(currentIndex - 1);
-  }
-
-  function updateUI() {
-    pageCurrent.textContent = currentIndex + 1;
-    const progress = ((currentIndex) / (totalSlides - 1)) * 100;
-    progressBar.style.width = `${progress}%`;
-
-    // 按钮状态
-    btnPrev.style.opacity = currentIndex === 0 ? '0.3' : '1';
-    btnPrev.style.cursor = currentIndex === 0 ? 'default' : 'pointer';
-    btnNext.style.opacity = currentIndex === totalSlides - 1 ? '0.3' : '1';
-    btnNext.style.cursor = currentIndex === totalSlides - 1 ? 'default' : 'pointer';
-  }
-
-  // 按钮事件
-  btnPrev.addEventListener('click', prevSlide);
-  btnNext.addEventListener('click', nextSlide);
-
-  // 键盘事件
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
-      e.preventDefault();
-      nextSlide();
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      prevSlide();
-    }
+function buildDots() {
+  slides.forEach((slide, index) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'dot-btn';
+    dot.setAttribute('aria-label', `跳转到第 ${index + 1} 页`);
+    dot.addEventListener('click', () => goToSlide(index));
+    sideDots.appendChild(dot);
   });
+}
 
-  // 滚轮事件 (防抖/节流控制)
-  let wheelTimer = null;
-  document.addEventListener('wheel', (e) => {
-    if (wheelTimer) return;
-    if (Math.abs(e.deltaY) > 20) { // 阈值防误触
-      if (e.deltaY > 0) {
-        nextSlide();
+function formatCount(target) {
+  return Number.isInteger(target) ? String(target) : target.toFixed(1);
+}
+
+function animateCountups(slide) {
+  const counters = slide.querySelectorAll('.countup');
+  counters.forEach((counter) => {
+    const target = Number(counter.dataset.target || '0');
+    const suffix = counter.dataset.suffix || '';
+    const duration = 1200;
+    const start = performance.now();
+
+    function frame(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = target * eased;
+      counter.textContent = `${formatCount(value)}${suffix}`;
+      if (progress < 1) {
+        window.requestAnimationFrame(frame);
       } else {
-        prevSlide();
+        counter.textContent = `${formatCount(target)}${suffix}`;
       }
-      wheelTimer = setTimeout(() => {
-        wheelTimer = null;
-      }, 1000); // 冷却时间防连续滚动
     }
+
+    counter.textContent = '0';
+    window.requestAnimationFrame(frame);
   });
+}
 
-  // 触屏滑动事件
-  let touchStartX = 0;
-  let touchEndX = 0;
-  document.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, {passive: true});
+function animateLegendBars(slide) {
+  slide.querySelectorAll('.legend-track i').forEach((bar) => {
+    const width = bar.dataset.width || '0%';
+    bar.style.width = '0%';
+    window.setTimeout(() => {
+      bar.style.width = width;
+    }, 120);
+  });
+}
 
-  document.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-  }, {passive: true});
+function updateUi() {
+  pageCurrent.textContent = String(currentIndex + 1);
+  pageTotal.textContent = String(slides.length);
+  progressBar.style.width = `${((currentIndex + 1) / slides.length) * 100}%`;
 
-  function handleSwipe() {
-    const threshold = 50;
-    if (touchStartX - touchEndX > threshold) {
-      nextSlide();
-    } else if (touchEndX - touchStartX > threshold) {
-      prevSlide();
-    }
+  btnPrev.disabled = currentIndex === 0;
+  btnNext.disabled = currentIndex === slides.length - 1;
+  btnPrev.style.opacity = currentIndex === 0 ? '0.35' : '1';
+  btnNext.style.opacity = currentIndex === slides.length - 1 ? '0.35' : '1';
+
+  sideDots.querySelectorAll('.dot-btn').forEach((dot, index) => {
+    dot.classList.toggle('is-active', index === currentIndex);
+  });
+}
+
+function activateSlide(index) {
+  const slide = slides[index];
+  slide.classList.add('active');
+  updateUi();
+  animateCountups(slide);
+  animateLegendBars(slide);
+}
+
+function goToSlide(index) {
+  if (isAnimating || index === currentIndex || index < 0 || index >= slides.length) {
+    return;
   }
 
-  // 全屏控制
-  btnFull.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
-        document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) { /* IE11 */
-        document.documentElement.msRequestFullscreen();
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) { /* Safari */
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) { /* IE11 */
-        document.msExitFullscreen();
-      }
-    }
-  });
+  isAnimating = true;
+  slides[currentIndex].classList.remove('active');
+  currentIndex = index;
+  activateSlide(currentIndex);
+
+  window.setTimeout(() => {
+    isAnimating = false;
+  }, 720);
+}
+
+function nextSlide() {
+  goToSlide(currentIndex + 1);
+}
+
+function prevSlide() {
+  goToSlide(currentIndex - 1);
+}
+
+btnPrev.addEventListener('click', prevSlide);
+btnNext.addEventListener('click', nextSlide);
+
+window.addEventListener('keydown', (event) => {
+  if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) {
+    event.preventDefault();
+    nextSlide();
+  }
+
+  if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) {
+    event.preventDefault();
+    prevSlide();
+  }
 });
+
+window.addEventListener('wheel', (event) => {
+  if (window.innerWidth <= 760 || wheelLock) {
+    return;
+  }
+
+  if (Math.abs(event.deltaY) < 18) {
+    return;
+  }
+
+  wheelLock = true;
+  if (event.deltaY > 0) {
+    nextSlide();
+  } else {
+    prevSlide();
+  }
+
+  window.setTimeout(() => {
+    wheelLock = false;
+  }, 760);
+}, { passive: true });
+
+window.addEventListener('touchstart', (event) => {
+  touchStartX = event.changedTouches[0].screenX;
+}, { passive: true });
+
+window.addEventListener('touchend', (event) => {
+  const touchEndX = event.changedTouches[0].screenX;
+  const deltaX = touchStartX - touchEndX;
+  if (Math.abs(deltaX) < 40) {
+    return;
+  }
+
+  if (deltaX > 0) {
+    nextSlide();
+  } else {
+    prevSlide();
+  }
+}, { passive: true });
+
+btnFull.addEventListener('click', async () => {
+  if (!document.fullscreenElement) {
+    await document.documentElement.requestFullscreen();
+    return;
+  }
+  await document.exitFullscreen();
+});
+
+document.addEventListener('fullscreenchange', () => {
+  btnFull.title = document.fullscreenElement ? '退出全屏' : '全屏演示';
+});
+
+buildDots();
+activateSlide(currentIndex);
