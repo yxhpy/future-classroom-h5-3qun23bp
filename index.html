@@ -1,183 +1,133 @@
 <!DOCTYPE html>
-<html lang='zh-CN'>
+<html lang="zh-CN">
 <head>
-  <meta charset='UTF-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <title>未来课堂：AI 赋能教育创新</title>
-  <link rel='stylesheet' href='style.css'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>《龟兔赛跑》绘本剧场</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id='presentation'>
-    <!-- 舞台顶棚幕布 -->
-    <div class='stage-valance'></div>
-    
-    <!-- UI 控制层 -->
-    <div class='ui-layer'>
-      <div class='progress-bar'><div class='progress-fill' id='progress'></div></div>
-      <div class='controls'>
-        <button id='prevBtn' class='btn' title='上一页'>&larr;</button>
-        <span id='pageIndicator' class='page-num'>1 / 8</span>
-        <button id='nextBtn' class='btn' title='下一页'>&rarr;</button>
-        <button id='fullscreenBtn' class='btn btn-icon' title='全屏'>&#x26F6;</button>
-      </div>
+    <div id="presentation-container">
+        <div id="slides-wrapper">
+            <!-- 第1页：封面 -->
+            <section class="slide active" id="slide-1">
+                <img src="assets/forest-stage.svg" class="bg-layer" alt="森林舞台">
+                <div class="content cover">
+                    <h1 class="title">龟兔赛跑</h1>
+                    <p class="subtitle">经典童话绘本剧场</p>
+                    <div class="characters-preview">
+                        <img src="assets/hare-proud.svg" class="hero-hare" alt="兔子">
+                        <img src="assets/tortoise-steady.svg" class="hero-tortoise" alt="乌龟">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第2页：角色介绍 -->
+            <section class="slide" id="slide-2">
+                <div class="content theater-layout">
+                    <div class="character-card">
+                        <img src="assets/hare-proud.svg" alt="骄傲的兔子">
+                        <h2>飞毛腿兔子</h2>
+                        <div class="bubble hare-bubble">我可是森林里跑得最快的！</div>
+                    </div>
+                    <div class="character-card">
+                        <img src="assets/tortoise-steady.svg" alt="稳重的乌龟">
+                        <h2>慢吞吞乌龟</h2>
+                        <div class="bubble tortoise-bubble">我虽然慢，但我很踏实。</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第3页：挑战发起 -->
+            <section class="slide" id="slide-3">
+                <img src="assets/forest-stage.svg" class="bg-layer" alt="森林舞台">
+                <div class="content dramatic-scene">
+                    <h2 class="scene-title">森林挑战赛</h2>
+                    <div class="dialogue-stage">
+                        <img src="assets/hare-proud.svg" class="char-left" alt="兔子">
+                        <div class="bubble dramatic">敢和我比跑步吗？小慢龟！</div>
+                        <div class="bubble calm">好啊，比就比！</div>
+                        <img src="assets/tortoise-steady.svg" class="char-right" alt="乌龟">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第4页：比赛过程1 - 兔子领先 -->
+            <section class="slide" id="slide-4">
+                <div class="content race-track">
+                    <h2>比赛开始！</h2>
+                    <p class="narration">兔子像风一样冲了出去，把乌龟远远甩在后面。</p>
+                    <div class="race-animation">
+                        <img src="assets/hare-proud.svg" class="moving-fast" alt="飞奔的兔子">
+                        <img src="assets/tortoise-steady.svg" class="moving-slow" alt="慢慢爬的乌龟">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第5页：比赛过程2 - 兔子睡着 -->
+            <section class="slide" id="slide-5">
+                <img src="assets/forest-stage.svg" class="bg-layer dimmed" alt="安静的森林">
+                <div class="content">
+                    <h2>骄傲的梦乡</h2>
+                    <div class="scene-focus">
+                        <img src="assets/hare-sleeping.svg" class="sleeping-hare" alt="睡觉的兔子">
+                        <div class="bubble zzz">Zzz... 乌龟还早着呢，我先睡一觉。</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第6页：冲刺反转 - 乌龟接近终点 -->
+            <section class="slide" id="slide-6">
+                <div class="content">
+                    <h2>坚持不懈</h2>
+                    <p class="narration">乌龟一步一步，慢慢地、稳稳地向前爬……</p>
+                    <div class="race-scene">
+                        <img src="assets/tortoise-steady.svg" class="approaching-finish" alt="接近终点的乌龟">
+                        <img src="assets/finish-line.svg" class="finish-line" alt="终点线">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第7页：结局 -->
+            <section class="slide" id="slide-7">
+                <div class="content">
+                    <h2>爆冷大结局！</h2>
+                    <div class="celebration-scene">
+                        <img src="assets/finish-line.svg" class="bg-finish" alt="终点">
+                        <img src="assets/tortoise-steady.svg" class="winner" alt="胜利的乌龟">
+                        <img src="assets/hare-proud.svg" class="shocked-hare" alt="震惊的兔子">
+                        <div class="bubble panic-bubble">哎呀！我怎么睡过头了！</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第8页：寓意页 -->
+            <section class="slide" id="slide-8">
+                <div class="content moral-board">
+                    <h2>故事告诉我们……</h2>
+                    <div class="lesson">
+                        <p>骄傲使人落后，</p>
+                        <p>虚心使人进步。</p>
+                        <p class="highlight">坚持到底就是胜利！</p>
+                    </div>
+                    <img src="assets/tortoise-steady.svg" class="cheer" alt="乌龟加油">
+                </div>
+            </section>
+        </div>
+
+        <!-- 播放控制UI -->
+        <div id="ui-layer">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="controls">
+                <button id="prev-btn" class="nav-btn" aria-label="上一页">◀</button>
+                <div class="page-indicator"><span id="current-page">1</span> / <span id="total-pages">8</span></div>
+                <button id="next-btn" class="nav-btn" aria-label="下一页">▶</button>
+                <button id="fullscreen-btn" class="icon-btn" aria-label="全屏">⛶</button>
+            </div>
+        </div>
     </div>
-
-    <!-- 第1页：封面 -->
-    <section class='slide active' id='slide-1'>
-      <div class='spotlight'></div>
-      <div class='cover-content'>
-        <div class='title-group'>
-          <div class='badge'>2026 教学展示</div>
-          <h1>未来课堂</h1>
-          <h2>AI 赋能教育创新</h2>
-          <p class='subtitle'>打造高参与感的互动“轻剧场”</p>
-        </div>
-        <div class='stage-center'>
-          <img src='assets/teacher-mentor.svg' class='character float-anim' alt='Teacher'>
-          <div class='bubble bubble-right pop-anim delay-1'>欢迎来到未来剧场课堂！</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 第2页：背景 -->
-    <section class='slide' id='slide-2'>
-      <h2 class='slide-title'>第一幕：为什么教育需要“剧场感”？</h2>
-      <div class='content-grid-2'>
-        <div class='card card-navy slide-in-left'>
-          <h3>传统课堂的局限</h3>
-          <p>单向的信息传递模式，使得知识成为枯燥的灌输。学生作为被动接收者，缺乏沉浸感与情感共鸣。</p>
-        </div>
-        <div class='card card-orange slide-in-right delay-1'>
-          <h3>AI 时代的呼唤</h3>
-          <p>利用人工智能，我们可以将课堂重塑为一个“交互舞台”。每个学生不仅是观众，更是剧目中的探索者与共创者。</p>
-        </div>
-      </div>
-      <div class='stage-floor'></div>
-    </section>
-
-    <!-- 第3页：痛点 -->
-    <section class='slide' id='slide-3'>
-      <h2 class='slide-title'>当前教学面临的痛点</h2>
-      <div class='theater-scene'>
-        <div class='pain-points'>
-          <div class='point-item pop-anim'>💡 注意力极易流失</div>
-          <div class='point-item pop-anim delay-1'>📊 缺乏个性化反馈</div>
-          <div class='point-item pop-anim delay-2'>🎭 互动形式过于单一</div>
-        </div>
-        <div class='character-wrapper slide-in-right'>
-          <img src='assets/student-thinking.svg' class='character' alt='Student Thinking'>
-          <div class='bubble bubble-left float-anim'>老师，我有点跟不上了...这部分好抽象呀。</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 第4页：方案 -->
-    <section class='slide' id='slide-4'>
-      <h2 class='slide-title'>AI 互动剧场解决方案</h2>
-      <div class='solution-hub'>
-        <div class='hub-center float-anim'>AI 核心引擎</div>
-        <div class='hub-nodes'>
-          <div class='node top-left pop-anim delay-1'><strong>智能角色分配</strong><br>根据学情匹配探究角色</div>
-          <div class='node top-right pop-anim delay-2'><strong>情感感知系统</strong><br>实时捕捉迷茫与专注度</div>
-          <div class='node bottom-left pop-anim delay-3'><strong>动态剧本生成</strong><br>进度卡壳时自动降维拆解</div>
-          <div class='node bottom-right pop-anim delay-4'><strong>多模态沉浸</strong><br>视听交互的沉浸式体验</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 第5页：课堂流程 -->
-    <section class='slide' id='slide-5'>
-      <h2 class='slide-title'>剧场式课堂流程设计</h2>
-      <div class='timeline-theater'>
-        <div class='act card pop-anim'>
-          <div class='act-tag bg-lake'>Act I : 导入幕</div>
-          <h3>悬念构建与角色登场</h3>
-          <p>AI 生成情境引子，分配学习任务角色（如：历史侦探、科学观察员）。</p>
-        </div>
-        <div class='act-arrow'>&rarr;</div>
-        <div class='act card pop-anim delay-1'>
-          <div class='act-tag bg-orange'>Act II : 探究幕</div>
-          <h3>核心冲突与协作突破</h3>
-          <p>提供多支线剧情，学生通过解题推进剧情，AI 实时给予侧面引导提示。</p>
-        </div>
-        <div class='act-arrow'>&rarr;</div>
-        <div class='act card pop-anim delay-2'>
-          <div class='act-tag bg-navy'>Act III : 高潮幕</div>
-          <h3>成果汇演与共创结算</h3>
-          <p>各组展示探究结果，AI 生成课堂数据光荣榜与彩蛋奖励。</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 第6页：数据结果 -->
-    <section class='slide' id='slide-6'>
-      <h2 class='slide-title'>试点成效与数据验证</h2>
-      <div class='data-scene'>
-        <div class='charts-container card slide-in-left'>
-          <div class='chart-item'>
-            <div class='chart-label'>课堂主动参与率 <span class='counter-box'><span class='counter' data-target='85'>0</span>%</span></div>
-            <div class='bar-track'><div class='bar-fill bg-orange' data-width='85%'></div></div>
-          </div>
-          <div class='chart-item'>
-            <div class='chart-label'>重难点知识掌握度 <span class='counter-box'><span class='counter' data-target='92'>0</span>%</span></div>
-            <div class='bar-track'><div class='bar-fill bg-lake' data-width='92%'></div></div>
-          </div>
-          <div class='chart-item'>
-            <div class='chart-label'>学生专注时长提升 <span class='counter-box'><span class='counter' data-target='45'>0</span>min</span></div>
-            <div class='bar-track'><div class='bar-fill bg-navy' data-width='75%'></div></div>
-          </div>
-        </div>
-        <div class='character-wrapper slide-in-right delay-1'>
-          <img src='assets/student-excited.svg' class='character float-anim' alt='Student Excited'>
-          <div class='bubble bubble-left'>太棒了！这节课像玩游戏一样有趣！</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 第7页：实施路线 -->
-    <section class='slide' id='slide-7'>
-      <h2 class='slide-title'>三阶段推进路线图</h2>
-      <div class='roadmap'>
-        <div class='step pop-anim'>
-          <div class='step-num'>01</div>
-          <div class='step-content'>
-            <h3>搭建舞台 (基建)</h3>
-            <p>引入 AI 教学中控系统，配置互动终端与感知硬件。</p>
-          </div>
-        </div>
-        <div class='step pop-anim delay-1'>
-          <div class='step-num'>02</div>
-          <div class='step-content'>
-            <h3>排演剧目 (内容)</h3>
-            <p>转化核心学科教案，生成多模态的互动教学课件库。</p>
-          </div>
-        </div>
-        <div class='step pop-anim delay-2'>
-          <div class='step-num'>03</div>
-          <div class='step-content'>
-            <h3>全面公演 (推广)</h3>
-            <p>全学科覆盖应用，建立常态化的数字剧场教学模式。</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 第8页：结尾 -->
-    <section class='slide' id='slide-8'>
-      <div class='spotlight center-spot'></div>
-      <div class='end-scene'>
-        <h2 class='end-title pop-anim'>让每个孩子在舞台上闪光</h2>
-        <div class='curtain-call slide-in-up delay-1'>
-          <div class='char-group'>
-            <img src='assets/teacher-mentor.svg' class='character' alt='Teacher'>
-            <img src='assets/student-excited.svg' class='character smaller' alt='Student'>
-          </div>
-        </div>
-        <h3 class='thanks pop-anim delay-2'>- 感谢聆听与观赏 -</h3>
-      </div>
-    </section>
-
-  </div>
-  <script src='script.js'></script>
+    <script src="script.js"></script>
 </body>
 </html>
