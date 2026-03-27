@@ -12,51 +12,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (totalPagesEl) totalPagesEl.textContent = totalSlides;
     
-    // 角色轻互动：点击角色触发动画
+    // 角色轻互动：自绘图形的温和反馈
     document.querySelectorAll('img').forEach(img => {
         if(img.src.includes('hare') || img.src.includes('tortoise')) {
             img.style.cursor = 'pointer';
             img.addEventListener('click', function(e) {
                 e.stopPropagation();
-                this.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                this.style.transform = 'scale(1.15) rotate(5deg)';
+                this.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                this.style.transform = 'scale(1.08) translateY(-8px)';
                 setTimeout(() => {
-                    this.style.transform = 'none';
-                }, 300);
+                    this.style.transform = '';
+                }, 400);
             });
         }
     });
 
-    // 结局页轻互动：点击屏幕撒花/掌声
+    // 结局页轻互动：精致的纯色粒子光点，替代廉价emoji
+    function createRefinedSparkle(x, y) {
+        const el = document.createElement('div');
+        el.style.position = 'fixed';
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.width = '6px';
+        el.style.height = '6px';
+        el.style.borderRadius = '50%';
+        const colors = ['#FFFFFF', '#FFD700', '#FFB6C1', '#87CEFA'];
+        el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        el.style.boxShadow = '0 0 6px ' + el.style.backgroundColor;
+        el.style.pointerEvents = 'none';
+        el.style.zIndex = '9999';
+        el.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        document.body.appendChild(el);
+        
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 30 + Math.random() * 40;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance - 20;
+
+        requestAnimationFrame(() => {
+            el.style.transform = 'translate(' + tx + 'px, ' + ty + 'px) scale(0)';
+            el.style.opacity = '0';
+        });
+        setTimeout(() => el.remove(), 850);
+    }
+
     const climaxSlide = document.getElementById('slide-7');
     const moralSlide = document.getElementById('slide-8');
     [climaxSlide, moralSlide].forEach(slide => {
         if(slide) {
             slide.addEventListener('click', (e) => {
                 if(!slide.classList.contains('active')) return;
-                createFloatingEmoji(e.clientX, e.clientY, slide.id === 'slide-7' ? ['🎉','🎊','✨'] : ['👏','🌟','💖']);
+                for(let i=0; i<6; i++) {
+                    setTimeout(() => createRefinedSparkle(e.clientX, e.clientY), i * 40);
+                }
             });
         }
     });
-
-    function createFloatingEmoji(x, y, emojis) {
-        const el = document.createElement('div');
-        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        el.style.position = 'fixed';
-        el.style.left = (x - 15) + 'px';
-        el.style.top = (y - 15) + 'px';
-        el.style.fontSize = '30px';
-        el.style.pointerEvents = 'none';
-        el.style.zIndex = '9999';
-        el.style.transition = 'all 1s ease-out';
-        document.body.appendChild(el);
-        
-        setTimeout(() => {
-            el.style.transform = `translateY(-100px) scale(1.5) rotate(${Math.random()*60 - 30}deg)`;
-            el.style.opacity = '0';
-        }, 50);
-        setTimeout(() => el.remove(), 1050);
-    }
 
     updateUI();
     triggerAnimations();
@@ -64,8 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function goToSlide(index) {
         if (index < 0 || index >= totalSlides) return;
         slides[currentSlideIndex].classList.remove('active');
-        
-        // 清理上一页的动态效果
         cleanUpAnimations(slides[currentSlideIndex]);
         
         currentSlideIndex = index;
@@ -151,165 +160,123 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 动画控制核心
+    // 核心动画调度
     function triggerAnimations() {
         const activeSlide = slides[currentSlideIndex];
         if (!activeSlide) return;
         
-        // 重置所有基础动画元素
-        const animatedElements = activeSlide.querySelectorAll('.bubble, .character-card, .actor');
-        animatedElements.forEach(el => {
+        // 1. 通用入场元素重置与触发
+        const animatables = activeSlide.querySelectorAll('.pop-in, .bubble, .slide-in-bottom, .drop-in');
+        animatables.forEach(el => {
             el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
+            el.style.transform = el.classList.contains('slide-in-bottom') ? 'translateY(30px)' : 
+                                 el.classList.contains('drop-in') ? 'translateY(-30px)' : 'scale(0.8)';
             el.style.transition = 'none';
         });
 
-        // 强制重绘
-        void activeSlide.offsetHeight;
+        void activeSlide.offsetHeight; // 强制重绘
 
-        // 统一恢复入场动画
-        animatedElements.forEach((el, idx) => {
+        animatables.forEach((el, idx) => {
+            const delay = el.classList.contains('delay-1') ? 400 : 
+                          el.classList.contains('delay-2') ? 800 : 100 + (idx * 150);
             setTimeout(() => {
-                el.style.transition = 'opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                el.style.transition = 'opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
                 el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            }, 150 * idx);
+                el.style.transform = 'translate(0) scale(1)';
+            }, delay);
         });
 
         const slideId = activeSlide.id;
         
-        // 第3页：对话依次出现
-        if (slideId === 'slide-3') {
-            const bubbles = activeSlide.querySelectorAll('.bubble');
-            if(bubbles.length >= 2) {
-                bubbles[0].style.opacity = '0';
-                bubbles[0].style.transform = 'scale(0.8)';
-                bubbles[1].style.opacity = '0';
-                bubbles[1].style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    bubbles[0].style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    bubbles[0].style.opacity = '1';
-                    bubbles[0].style.transform = 'scale(1)';
-                }, 500);
-                setTimeout(() => {
-                    bubbles[1].style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    bubbles[1].style.opacity = '1';
-                    bubbles[1].style.transform = 'scale(1)';
-                }, 1500);
-            }
-        }
-        
-        // 第4页：比赛开始，兔子飞奔，乌龟慢爬
+        // 2. 场景特有精细化位移与表演
         if (slideId === 'slide-4') {
+            // 比赛页位移动画更自然
             const hare = activeSlide.querySelector('.moving-fast');
             const tortoise = activeSlide.querySelector('.moving-slow');
+            
             if(hare) { 
-                hare.style.transform = 'translate(0, 0)'; 
+                hare.style.transform = 'translateX(-10vw)'; 
                 hare.style.transition = 'none'; 
             }
             if(tortoise) { 
-                tortoise.style.transform = 'translate(0, 0)'; 
+                tortoise.style.transform = 'translateX(-5vw)'; 
                 tortoise.style.transition = 'none'; 
             }
+            
             setTimeout(() => {
                 if(hare) { 
-                    hare.style.transition = 'transform 1.2s cubic-bezier(0.5, 0.05, 0.1, 1)'; 
-                    hare.style.transform = 'translate(150vw, -30px) rotate(10deg)'; 
+                    hare.style.transition = 'transform 1.2s cubic-bezier(0.4, 0.0, 1, 1)'; 
+                    hare.style.transform = 'translateX(120vw)'; 
                 }
                 if(tortoise) { 
-                    tortoise.style.transition = 'transform 8s linear'; 
-                    tortoise.style.transform = 'translate(50vw, 0)'; 
+                    // 乌龟匀速稳步前进
+                    tortoise.style.transition = 'transform 10s linear'; 
+                    tortoise.style.transform = 'translateX(45vw)'; 
                 }
-            }, 400);
+            }, 300);
         }
 
-        // 第5页：呼噜声气泡动画
-        if (slideId === 'slide-5') {
-            const zzz = activeSlide.querySelector('.zzz');
-            if(zzz) {
-                zzz.style.animation = 'none';
-                void zzz.offsetHeight;
-                zzz.style.animation = 'float-up 3s infinite ease-in-out';
-            }
-        }
-        
-        // 第6页：乌龟努力冲刺
         if (slideId === 'slide-6') {
-            const tortoise = activeSlide.querySelector('.approaching-finish');
+            // 冲刺透视构图：利用缩放产生前中后景的纵深靠近感
+            const tortoise = activeSlide.querySelector('.approaching-tortoise');
             if(tortoise) {
-                tortoise.style.transform = 'translateX(-20vw)'; 
+                tortoise.style.transform = 'scale(0.5) translateY(40px)'; 
                 tortoise.style.transition = 'none';
                 setTimeout(() => {
-                    tortoise.style.transition = 'transform 6s linear';
-                    tortoise.style.transform = 'translateX(60vw)';
+                    tortoise.style.transition = 'transform 8s ease-out';
+                    tortoise.style.transform = 'scale(1.1) translateY(0)';
                 }, 300);
-                
-                let sweatInterval = setInterval(() => {
-                    if(currentSlideIndex !== 5) {
-                        clearInterval(sweatInterval);
-                        return;
-                    }
-                    const rect = tortoise.getBoundingClientRect();
-                    createFloatingEmoji(rect.right, rect.top, ['💦']);
-                }, 1500);
-                activeSlide.dataset.interval = sweatInterval;
             }
         }
         
-        // 第7页：结局爆冷
         if (slideId === 'slide-7') {
-             const hare = activeSlide.querySelector('.shocked-hare');
-             const panicBubble = activeSlide.querySelector('.panic-bubble');
+             // 结局庆祝更克制、精致
              const winner = activeSlide.querySelector('.winner');
+             const hare = activeSlide.querySelector('.shocked-hare');
+             const confettis = activeSlide.querySelectorAll('.confetti-piece');
              
              if(winner) {
-                 winner.style.transform = 'scale(0) rotate(-180deg)';
+                 winner.style.transform = 'translateY(40px) scale(0.9)';
+                 winner.style.opacity = '0';
                  winner.style.transition = 'none';
                  setTimeout(() => {
-                     winner.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                     winner.style.transform = 'scale(1) rotate(0deg)';
-                 }, 200);
+                     winner.style.transition = 'transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease';
+                     winner.style.transform = 'translateY(0) scale(1)';
+                     winner.style.opacity = '1';
+                 }, 300);
              }
 
              if(hare) {
-                 hare.style.transform = 'translateY(100px) scale(0.5)'; 
+                 hare.style.transform = 'translateX(20px)'; 
                  hare.style.opacity = '0'; 
                  hare.style.transition = 'none';
                  setTimeout(() => {
-                    hare.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease-in';
-                    hare.style.transform = 'translateY(0) scale(1)'; 
+                    hare.style.transition = 'transform 0.5s ease-out, opacity 0.4s ease';
+                    hare.style.transform = 'translateX(0)'; 
                     hare.style.opacity = '1';
-                 }, 800);
-             }
-             if(panicBubble) {
-                 panicBubble.style.opacity = '0'; 
-                 panicBubble.style.transition = 'none';
-                 setTimeout(() => {
-                     panicBubble.style.transition = 'opacity 0.3s ease-in, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
-                     panicBubble.style.opacity = '1';
-                     panicBubble.style.transform = 'scale(1.1)';
-                     setTimeout(() => panicBubble.style.transform = 'scale(1)', 300);
-                 }, 1300);
+                 }, 700);
              }
              
-             // 自动撒花
-             setTimeout(() => {
-                 for(let i=0; i<30; i++) {
-                     setTimeout(() => createFloatingEmoji(
-                         Math.random() * window.innerWidth, 
-                         window.innerHeight, 
-                         ['🎉','🎊','✨','⭐']
-                     ), i * 50);
-                 }
-             }, 500);
+             // CSS碎纸片温和飘落
+             confettis.forEach((c, i) => {
+                 c.style.opacity = '0';
+                 c.style.transform = 'translateY(-20px) rotate(0deg)';
+                 c.style.transition = 'none';
+                 setTimeout(() => {
+                     c.style.transition = 'all 1.5s ease-out';
+                     c.style.opacity = '0.8';
+                     c.style.transform = 'translateY(' + (40 + Math.random() * 40) + 'px) rotate(' + (Math.random() * 180) + 'deg)';
+                 }, 500 + i * 150);
+             });
         }
     }
 
     function cleanUpAnimations(slide) {
         if(!slide) return;
-        if(slide.dataset.interval) {
-            clearInterval(slide.dataset.interval);
-            delete slide.dataset.interval;
-        }
+        // 清理可能的遗留计时器或动态内联样式
+        const movingFast = slide.querySelector('.moving-fast');
+        if(movingFast) movingFast.style.transition = 'none';
+        const movingSlow = slide.querySelector('.moving-slow');
+        if(movingSlow) movingSlow.style.transition = 'none';
     }
 });

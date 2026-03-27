@@ -1,14 +1,19 @@
 :root {
-    --c-beige: #FFF8DC;
-    --c-beige-dark: #F5E6D3;
-    --c-green: #3CB371;
-    --c-dark-green: #2E8B57;
-    --c-lake-blue: #5D9CEC;
-    --c-dark-blue: #1C2841;
+    --c-cream: #FFFDF0;
+    --c-wood: #8B5A2B;
+    --c-wood-light: #DEB887;
+    --c-wood-dark: #5C3A21;
+    --c-curtain: #C82333;
+    --c-curtain-dark: #8B0000;
+    --c-leaf-green: #6B8E23;
+    --c-forest-green: #2E8B57;
+    --c-sky-blue: #87CEEB;
+    --c-night-blue: #0A192F;
+    --c-gold: #FFD700;
     --c-orange: #FF8C00;
-    --c-orange-light: #FFA033;
-    --c-red: #E74C3C;
-    --c-shadow: rgba(28, 40, 65, 0.15);
+    --c-text-dark: #3E2723;
+    --c-shadow: rgba(0, 0, 0, 0.4);
+    --c-light-beam: rgba(255, 255, 220, 0.4);
     --font-main: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', 'PingFang SC', sans-serif;
 }
 
@@ -24,34 +29,98 @@ body, html {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: var(--c-dark-blue);
+    background-color: #111;
     font-family: var(--font-main);
-    color: var(--c-dark-blue);
+    color: var(--c-text-dark);
     touch-action: none;
 }
 
-/* 绘本外框效果 */
+/* ================= 舞台与幕布 ================= */
 #presentation-container {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background: radial-gradient(circle at center, var(--c-beige) 0%, var(--c-beige-dark) 100%);
+    background: #000;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: inset 0 0 50px rgba(0,0,0,0.1), inset 0 0 0 12px #fff, inset 0 0 0 18px var(--c-dark-blue);
 }
 
+.curtain-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    pointer-events: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.curtain {
+    background: linear-gradient(to right, var(--c-curtain-dark), var(--c-curtain) 20%, var(--c-curtain-dark) 40%, var(--c-curtain) 60%, var(--c-curtain-dark) 80%, var(--c-curtain));
+    box-shadow: 0 0 25px rgba(0,0,0,0.8);
+}
+
+.curtain-left, .curtain-right {
+    width: 8vw;
+    min-width: 40px;
+    height: 100%;
+    position: relative;
+}
+
+.curtain-left {
+    border-right: 4px solid rgba(0,0,0,0.3);
+    border-radius: 0 0 30px 0;
+}
+
+.curtain-right {
+    border-left: 4px solid rgba(0,0,0,0.3);
+    border-radius: 0 0 0 30px;
+}
+
+.curtain-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8vh;
+    min-height: 40px;
+    border-bottom: 6px solid rgba(0,0,0,0.4);
+    border-radius: 0 0 40px 40px;
+    background: linear-gradient(to bottom, var(--c-curtain-dark), var(--c-curtain));
+}
+
+/* ================= 幻灯片与景深 ================= */
 #slides-wrapper {
     width: 100%;
     height: 100%;
     position: relative;
-    perspective: 1000px;
+    perspective: 1200px;
 }
 
-/* 幻灯片：纸牌/书页飞入效果 */
 .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.05);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+    z-index: 10;
+}
+
+.layer {
     position: absolute;
     top: 0;
     left: 0;
@@ -61,109 +130,114 @@ body, html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(80px) rotate(3deg) scale(0.95);
-    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.background {
     z-index: 1;
 }
 
-.slide.active {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateX(0) rotate(0) scale(1);
-    z-index: 10;
-}
-
-/* 背景图层与视差 */
-.bg-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
-    opacity: 0.12;
-    transform: scale(1.1);
-}
-
-.slide.active .bg-layer.parallax-bg {
-    animation: panBg 20s ease-in-out infinite alternate;
-}
-
-@keyframes panBg {
-    0% { transform: scale(1.1) translateX(-2%); }
-    100% { transform: scale(1.1) translateX(2%); }
-}
-
-.bg-layer.dimmed {
-    filter: brightness(0.3) sepia(0.6) hue-rotate(190deg);
-    opacity: 0.4;
-}
-
-.content {
-    position: relative;
+.midground {
     z-index: 2;
-    width: 90%;
-    max-width: 1000px;
-    text-align: center;
+    padding: 10vh 12vw;
 }
 
-/* 绘本风旁白板 */
-.narration-board {
-    background: #fff;
-    border: 4px solid var(--c-dark-blue);
+.foreground {
+    z-index: 3;
+    pointer-events: none;
+}
+
+.bg-image {
+    width: 110%;
+    height: 110%;
+    object-fit: cover;
+    transform: scale(1.05);
+    transition: all 10s linear;
+}
+
+.blur-bg .bg-image {
+    filter: blur(8px) brightness(0.8);
+}
+
+.parallax-deep .bg-image {
+    transform: scale(1.2) translateY(2%);
+}
+.slide.active .parallax-deep .bg-image {
+    transform: scale(1.2) translateY(-2%);
+}
+
+.panning-bg .bg-image {
+    transform: scale(1.2) translateX(5%);
+}
+.slide.active .panning-bg .bg-image {
+    transform: scale(1.2) translateX(-5%);
+}
+
+.night-lighting .dimmed {
+    filter: brightness(0.3) contrast(1.2) sepia(0.4) hue-rotate(180deg);
+}
+
+.stage-dimmed .very-dim {
+    filter: blur(10px) brightness(0.2);
+}
+
+/* ================= 道具与通用组件 ================= */
+.wooden-board, .wooden-sign, .wooden-billboard {
+    background: linear-gradient(135deg, var(--c-wood-light), var(--c-wood), var(--c-wood-dark));
+    border: 6px solid var(--c-wood-dark);
     border-radius: 16px;
-    padding: 12px 30px;
-    font-size: clamp(1.2rem, 3vw, 1.6rem);
-    font-weight: bold;
-    color: var(--c-dark-blue);
-    display: inline-block;
-    box-shadow: 6px 6px 0 var(--c-lake-blue), 0 10px 20px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    transform: rotate(-1deg);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 8px 10px 15px var(--c-shadow);
+    color: var(--c-cream);
+    text-align: center;
     position: relative;
+}
+
+.wooden-board::before, .wooden-sign::before, .wooden-billboard::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 4px; right: 4px; bottom: 4px;
+    border: 2px dashed rgba(255,255,255,0.3);
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+.narration-ribbon, .narration-box {
+    background: var(--c-cream);
+    color: var(--c-text-dark);
+    border: 4px solid var(--c-wood-dark);
+    border-radius: 20px;
+    padding: 15px 30px;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: bold;
+    box-shadow: 4px 6px 0 var(--c-wood), 0 10px 20px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
     z-index: 20;
 }
 
-.narration-board.night-mode {
-    background: var(--c-dark-blue);
-    color: #fff;
-    border-color: #fff;
-    box-shadow: 6px 6px 0 var(--c-lake-blue);
-}
+.narration-ribbon.top { position: absolute; top: 12%; }
+.narration-ribbon.float-top { position: absolute; top: 10%; }
+.narration-box.bottom-left { position: absolute; bottom: 15%; left: 10%; }
+.narration-box.top-left { position: absolute; top: 15%; left: 10%; }
 
-.narration-board.big-news {
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    color: var(--c-red);
-    box-shadow: 6px 6px 0 var(--c-orange);
-    animation: pulseBoard 2s infinite;
-}
-
-@keyframes pulseBoard {
-    0%, 100% { transform: rotate(-1deg) scale(1); }
-    50% { transform: rotate(1deg) scale(1.05); }
-}
-
-/* 气泡组件 (更具漫画感) */
 .bubble {
     background: #fff;
-    border: 5px solid var(--c-dark-blue);
-    border-radius: 25px;
-    padding: 15px 25px;
-    font-size: 1.3rem;
+    border: 4px solid var(--c-text-dark);
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
     font-weight: bold;
-    color: var(--c-dark-blue);
+    color: var(--c-text-dark);
     position: relative;
-    display: inline-block;
-    box-shadow: 4px 4px 0 var(--c-orange), 0 15px 25px rgba(0,0,0,0.15);
+    box-shadow: 4px 4px 0 var(--c-shadow);
     opacity: 0;
-    transform: scale(0.3) rotate(-10deg);
+    transform: scale(0.5) translateY(20px);
 }
 
 .slide.active .bubble {
-    animation: popBubble 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: bubblePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes bubblePop {
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .bubble::after {
@@ -172,531 +246,250 @@ body, html {
     border: 12px solid transparent;
 }
 
-@keyframes popBubble {
-    from { opacity: 0; transform: scale(0.3) rotate(-10deg); }
-    to { opacity: 1; transform: scale(1) rotate(0); }
-}
-
-/* 角色纸片剪影效果 */
+/* ================= 角色与特效图像 ================= */
 img[src*='assets/'] {
-    filter: drop-shadow(0 8px 10px var(--c-shadow)) drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));
     transform-origin: bottom center;
 }
 
-/* 第1页：封面 */
-.cover h1 {
-    font-size: clamp(3.5rem, 10vw, 6rem);
-    color: var(--c-dark-green);
-    text-shadow: 4px 4px 0px #fff, 8px 8px 0px var(--c-orange);
-    margin-bottom: 15px;
-    letter-spacing: 4px;
-    transform: rotate(-2deg);
-}
+/* 动画类 */
+.slide.active .animate-bounce { animation: softBounce 2s ease-in-out infinite; }
+.slide.active .animate-sway { animation: gentleSway 3s ease-in-out infinite; }
+.slide.active .animate-lean { animation: aggressiveLean 2s ease-in-out infinite; }
+.slide.active .animate-nod { animation: happyNod 2.5s ease-in-out infinite; }
+.slide.active .animate-breathe { animation: sleepBreathe 4s ease-in-out infinite; }
+.slide.active .animate-crawl { animation: slowCrawl 1.5s ease-in-out infinite; }
+.slide.active .animate-jump { animation: joyJump 1.2s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; }
+.slide.active .animate-tremble { animation: fastTremble 0.2s linear infinite; }
+.slide.active .pop-in { animation: stagePop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.slide.active .drop-in { animation: stageDrop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.slide.active .delay-1 { animation-delay: 0.3s; }
+.slide.active .delay-2 { animation-delay: 0.6s; }
 
-.slide.active .cover h1 {
-    animation: titleBounce 2s ease-in-out infinite alternate;
-}
+@keyframes softBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes gentleSway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes aggressiveLean { 0%, 100% { transform: rotate(5deg) scale(1.05); } 50% { transform: rotate(0deg) scale(1); } }
+@keyframes happyNod { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(8deg); } 40% { transform: rotate(0deg); } }
+@keyframes sleepBreathe { 0%, 100% { transform: scale(1) scaleY(1); } 50% { transform: scale(1.03) scaleY(0.97); } }
+@keyframes slowCrawl { 0%, 100% { transform: translateX(0) translateY(0) rotate(-2deg); } 50% { transform: translateX(5px) translateY(-5px) rotate(2deg); } }
+@keyframes joyJump { 0%, 100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-40px) scaleY(1.1); } }
+@keyframes fastTremble { 0% { transform: translateX(-3px) rotate(-1deg); } 50% { transform: translateX(3px) rotate(1deg); } 100% { transform: translateX(-3px) rotate(-1deg); } }
+@keyframes stagePop { from { opacity: 0; transform: scale(0.6) translateY(50px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes stageDrop { from { opacity: 0; transform: scale(1.2) translateY(-50px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-@keyframes titleBounce {
-    0% { transform: rotate(-2deg) scale(1); }
-    100% { transform: rotate(1deg) scale(1.02); }
-}
+/* ================= 第一幕：封面大景 ================= */
+.cover-scene { align-items: center; justify-content: center; gap: 40px; }
+.title-board { padding: 30px 50px; transform: rotate(-2deg); }
+.title { font-size: clamp(3rem, 8vw, 5rem); color: var(--c-gold); text-shadow: 3px 3px 0 var(--c-wood-dark), 5px 5px 0 var(--c-shadow); margin-bottom: 10px; letter-spacing: 5px; }
+.subtitle { font-size: clamp(1.2rem, 3vw, 1.8rem); background: var(--c-curtain); padding: 5px 20px; border-radius: 20px; display: inline-block; }
 
-.cover .subtitle {
-    font-size: clamp(1.2rem, 3vw, 1.8rem);
-    color: #fff;
-    background: var(--c-orange);
-    display: inline-block;
-    padding: 10px 30px;
-    border-radius: 40px;
-    border: 4px solid #fff;
-    box-shadow: 4px 4px 0 var(--c-dark-blue);
-    font-weight: bold;
-}
+.characters-preview { display: flex; align-items: flex-end; gap: 60px; height: 150px; }
+.hero { width: clamp(120px, 20vw, 160px); }
 
-.characters-preview {
-    margin-top: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 50px;
-    height: 180px;
-}
-
-.hero-hare, .hero-tortoise {
-    width: clamp(110px, 22vw, 180px);
-}
-
-.slide.active .bounce { animation: bouncyHare 1.5s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; }
-.slide.active .sway { animation: swayTortoise 3s ease-in-out infinite; }
-
-@keyframes bouncyHare {
-    0%, 100% { transform: translateY(0) scaleY(1); }
-    50% { transform: translateY(-25px) scaleY(1.05); }
-}
-@keyframes swayTortoise {
-    0%, 100% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
-}
-
-.decoration.stars {
+.stage-effects { position: absolute; width: 100%; height: 100%; }
+.spotlight-beam {
     position: absolute;
-    top: 20%;
-    width: 100%;
-    font-size: 2.5rem;
-    letter-spacing: 60px;
-    color: #FFD700;
-    text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-    opacity: 0.8;
-    pointer-events: none;
+    top: -10%;
+    width: 60vw;
+    height: 120%;
+    background: linear-gradient(to bottom, var(--c-light-beam) 0%, transparent 100%);
+    clip-path: polygon(40% 0, 60% 0, 100% 100%, 0% 100%);
+    mix-blend-mode: overlay;
 }
-.slide.active .stars { animation: twinkleStars 2s ease-in-out infinite alternate; }
-@keyframes twinkleStars {
-    0% { opacity: 0.4; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1.1); }
-}
+.left-beam { left: -15%; transform: rotate(-15deg); }
+.right-beam { right: -15%; transform: rotate(15deg); }
 
-/* 第2页：角色介绍 */
-.theater-layout {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 40px;
-    padding-top: 20px;
+.css-sparkles .sparkle {
+    position: absolute;
+    width: 20px; height: 20px;
+    background: var(--c-gold);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    opacity: 0;
 }
+.s1 { top: 30%; left: 20%; animation: twinkle 2s infinite 0.2s; }
+.s2 { top: 20%; right: 25%; animation: twinkle 2.5s infinite 1s; width: 30px; height: 30px; }
+.s3 { bottom: 30%; left: 40%; animation: twinkle 1.8s infinite 0.5s; }
+@keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); } 50% { opacity: 1; transform: scale(1.2) rotate(45deg); } }
 
+/* ================= 第二幕：角色介绍 ================= */
+.character-showcase { display: flex; justify-content: center; gap: 5vw; width: 100%; margin-top: 10vh; }
 .character-card {
-    background: #fff;
-    padding: 40px 20px 20px;
+    background: var(--c-cream);
+    border: 6px solid var(--c-wood-dark);
     border-radius: 20px;
-    border: 5px solid var(--c-dark-blue);
-    width: 42%;
-    min-width: 280px;
-    box-shadow: 8px 8px 0 var(--c-lake-blue), 0 20px 30px rgba(0,0,0,0.1);
+    padding: 30px 20px;
+    width: 35%;
+    min-width: 250px;
     position: relative;
-    overflow: hidden;
-}
-
-.slide.active .pop-in {
-    animation: cardPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-}
-.slide.active .delay { animation-delay: 0.4s; }
-
-@keyframes cardPop {
-    from { opacity: 0; transform: translateY(40px) scale(0.8); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.spotlight {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 180px;
-    height: 100%;
-    background: radial-gradient(ellipse at top, rgba(255,255,255,0.9) 0%, transparent 70%);
-    z-index: 0;
-    pointer-events: none;
-}
-
-.character-card img {
-    width: 130px;
-    height: 130px;
-    object-fit: contain;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 1;
-}
-
-.character-card h2 {
-    color: var(--c-dark-blue);
-    font-size: 2rem;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 1;
-    background: var(--c-beige);
-    border-radius: 10px;
-    padding: 5px;
-    border: 3px solid var(--c-dark-blue);
-}
-
-.hare-bubble::after { top: 100%; left: 50%; transform: translateX(-50%); border-top-color: var(--c-dark-blue); }
-.tortoise-bubble::after { top: 100%; left: 50%; transform: translateX(-50%); border-top-color: var(--c-dark-blue); }
-
-.slide.active .hare-bubble { animation-delay: 0.6s; }
-.slide.active .tortoise-bubble { animation-delay: 1.0s; }
-
-/* 第3页：挑战发起 */
-.dramatic-scene .dialogue-stage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-    margin-top: 40px;
-}
-
-.actor { display: flex; align-items: center; position: relative; }
-
-.dialogue-stage img {
-    width: clamp(100px, 18vw, 150px);
-}
-
-.slide.active .char-left { animation: slideInLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
-.slide.active .char-right { animation: slideInRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards 0.3s; }
-
-@keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px) rotate(-10deg); } to { opacity: 1; transform: translateX(0) rotate(0); } }
-@keyframes slideInRight { from { opacity: 0; transform: translateX(50px) rotate(10deg); } to { opacity: 1; transform: translateX(0) rotate(0); } }
-
-.dramatic {
-    border-color: var(--c-red);
-    color: var(--c-red);
-    box-shadow: 4px 4px 0 var(--c-dark-blue);
-    margin-right: -25px;
-    z-index: 2;
-    font-size: 1.5rem;
-}
-.dramatic::after { top: 50%; left: -24px; transform: translateY(-50%); border-right-color: var(--c-red); }
-
-.calm {
-    border-color: var(--c-lake-blue);
-    color: var(--c-lake-blue);
-    box-shadow: 4px 4px 0 var(--c-dark-blue);
-    margin-left: -25px;
-    z-index: 2;
-}
-.calm::after { top: 50%; right: -24px; transform: translateY(-50%); border-left-color: var(--c-lake-blue); }
-
-.slide.active .shout { animation: shoutShake 0.6s cubic-bezier(.36,.07,.19,.97) forwards 0.5s; }
-.slide.active .firm { animation-delay: 1.2s; }
-
-@keyframes shoutShake {
-    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
-    50% { transform: scale(1.1) rotate(5deg); opacity: 1; }
-    70% { transform: scale(0.9) rotate(-3deg); }
-    100% { transform: scale(1) rotate(0); opacity: 1; }
-}
-
-/* 第4/6页：比赛跑道舞台感 */
-.race-track, .race-scene {
-    border-bottom: 25px solid var(--c-dark-green);
-    padding-bottom: 20px;
-    position: relative;
-    height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    border-radius: 20px;
-    background: linear-gradient(to bottom, transparent 60%, rgba(60, 179, 113, 0.2) 100%);
-}
-
-.race-track::after, .race-scene::after {
-    content: '';
-    position: absolute;
-    bottom: -25px;
-    left: -5%;
-    width: 110%;
-    height: 25px;
-    background: repeating-linear-gradient(90deg, var(--c-green), var(--c-green) 30px, var(--c-dark-green) 30px, var(--c-dark-green) 60px);
-    border-top: 4px solid var(--c-dark-blue);
-    border-bottom: 4px solid var(--c-dark-blue);
-    border-radius: 10px;
-}
-
-.applause-board {
-    position: absolute;
-    top: -20px;
-    right: 10%;
-    background: var(--c-orange);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 15px;
-    border: 3px solid #fff;
-    font-weight: bold;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    transform-origin: top center;
-}
-.slide.active .applause-board { animation: swingSign 3s ease-in-out infinite; }
-
-@keyframes swingSign {
-    0%, 100% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
-}
-
-.racer { position: absolute; bottom: 10px; }
-.moving-fast, .moving-slow, .approaching-finish {
-    width: clamp(90px, 15vw, 130px);
-}
-
-.slide.active .fast-racer { animation: dashRight 3s linear infinite; }
-.slide.active .slow-racer { animation: crawlRight 15s linear infinite; }
-.slide.active .approaching-finish { left: 10%; animation: crawlToFinish 10s linear forwards; }
-
-.dust-cloud {
-    position: absolute;
-    bottom: 0;
-    left: -40px;
-    font-size: 2rem;
+    align-items: center;
+    box-shadow: 8px 10px 0 var(--c-shadow);
     opacity: 0;
 }
-.slide.active .dust-cloud { animation: poof 0.8s infinite; }
-
-.sweat-drop {
+.card-spotlight {
     position: absolute;
-    top: -10px;
-    right: -10px;
-    font-size: 1.5rem;
-    opacity: 0;
-}
-.slide.active .sweat-drop { animation: drip 1.5s infinite; }
-
-@keyframes dashRight {
-    0% { left: -30%; transform: rotate(8deg); }
-    25% { transform: rotate(-2deg) translateY(-15px); }
-    50% { transform: rotate(8deg); }
-    75% { transform: rotate(-2deg) translateY(-15px); }
-    100% { left: 120%; transform: rotate(8deg); }
-}
-@keyframes crawlRight {
-    0% { left: -10%; transform: rotate(-3deg); }
-    50% { transform: rotate(3deg); }
-    100% { left: 80%; transform: rotate(-3deg); }
-}
-@keyframes crawlToFinish {
-    0% { left: 10%; transform: rotate(-3deg); }
-    50% { transform: rotate(3deg); }
-    100% { left: 60%; transform: rotate(0); }
-}
-@keyframes poof {
-    0% { opacity: 0; transform: scale(0.5) translateX(0); }
-    50% { opacity: 1; transform: scale(1.2) translateX(-20px); }
-    100% { opacity: 0; transform: scale(1.5) translateX(-40px); }
-}
-@keyframes drip {
-    0% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(20px); }
-}
-
-.finish-line {
-    position: absolute;
-    bottom: -10px;
-    right: 15%;
-    width: 80px;
-    height: 200px;
-    object-fit: contain;
-    z-index: 0;
-    filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.2));
-}
-
-.cheer-props {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--c-orange);
-    text-shadow: 2px 2px 0 #fff;
-    opacity: 0;
-}
-.slide.active .cheer-props { animation: floatUpText 2s ease-in-out infinite alternate 1s; }
-@keyframes floatUpText {
-    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-    100% { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-/* 第5页：睡觉 */
-.scene-focus {
-    margin-top: 60px;
-    position: relative;
-    display: inline-block;
-}
-
-.tree-shade::before {
-    content: '';
-    position: absolute;
-    top: -50px;
-    left: -50px;
-    right: -50px;
-    bottom: -20px;
-    background: radial-gradient(ellipse at center, transparent 30%, rgba(28, 40, 65, 0.4) 100%);
-    border-radius: 50%;
-    z-index: -1;
-}
-
-.sleeping-hare {
-    width: clamp(150px, 28vw, 220px);
-    transform-origin: center bottom;
-}
-.slide.active .sleeping-hare.breathe { animation: deepBreathe 4s ease-in-out infinite; }
-
-@keyframes deepBreathe {
-    0%, 100% { transform: scale(1) rotate(0); }
-    50% { transform: scale(1.04) rotate(-2deg); }
-}
-
-.zzz {
-    position: absolute;
-    top: -70px;
-    right: -30px;
-    border-color: var(--c-lake-blue);
-    color: var(--c-lake-blue);
-    font-size: 1.5rem;
-}
-.zzz::after { bottom: -18px; left: 20px; border-top-color: var(--c-dark-blue); border-width: 14px; }
-.slide.active .zzz { animation: zzzFloat 3s ease-in-out infinite 0.5s; opacity: 0; }
-
-@keyframes zzzFloat {
-    0% { opacity: 0; transform: translateY(10px) scale(0.8); }
-    20% { opacity: 1; transform: translateY(0) scale(1); }
-    80% { opacity: 1; transform: translateY(-15px) scale(1.1); }
-    100% { opacity: 0; transform: translateY(-30px) scale(1.2); }
-}
-
-/* 第7页：结局 */
-.celebration-scene {
-    position: relative;
-    height: 400px;
-    margin-top: 20px;
-}
-
-.bg-finish {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 140px;
-    opacity: 0.2;
-}
-
-.winner {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: clamp(130px, 22vw, 180px);
-    z-index: 3;
-}
-.slide.active .winner.jump-joy { animation: jumpJoyWin 1.2s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; }
-
-.loser-reaction {
-    position: absolute;
-    bottom: 30px;
-    left: 5%;
-}
-
-.shocked-hare {
-    width: clamp(110px, 18vw, 150px);
-    transform: scaleX(-1);
-}
-.slide.active .shocked-hare.tremble { animation: shockedTremble 0.3s infinite; }
-
-.panic-bubble {
-    position: absolute;
-    top: -80px;
-    left: 20%;
-    border-color: var(--c-red);
-    color: var(--c-red);
-    width: 200px;
-}
-.panic-bubble::after { bottom: -18px; right: 40px; border-top-color: var(--c-dark-blue); border-width: 14px; }
-.slide.active .panic-bubble.explode { animation: popBubble 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.8s; }
-
-@keyframes jumpJoyWin {
-    0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
-    50% { transform: translateX(-50%) translateY(-50px) scale(1.1) rotate(5deg); }
-}
-@keyframes shockedTremble {
-    0%, 100% { transform: scaleX(-1) translateX(0) rotate(0); }
-    25% { transform: scaleX(-1) translateX(-3px) rotate(-3deg); }
-    75% { transform: scaleX(-1) translateX(3px) rotate(3deg); }
-}
-
-.confetti {
-    position: absolute;
-    top: 10%;
-    width: 100%;
-    font-size: 2.5rem;
-    letter-spacing: 40px;
-    opacity: 0;
+    top: -50px; left: 50%; transform: translateX(-50%);
+    width: 150px; height: 200px;
+    background: radial-gradient(ellipse at top, rgba(255,255,255,0.8), transparent 70%);
     pointer-events: none;
 }
-.slide.active .confetti { animation: confettiFall 3s linear infinite; }
-@keyframes confettiFall {
-    0% { opacity: 1; transform: translateY(-50px) rotate(0deg); }
-    100% { opacity: 0; transform: translateY(200px) rotate(10deg); }
+.card-img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 20px; z-index: 2; }
+.name-tag {
+    background: var(--c-wood);
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    z-index: 2;
+    border: 3px solid var(--c-wood-dark);
 }
+.bubble.shake { animation: shakeBubble 0.5s infinite alternate; }
+.bubble.float { animation: floatBubble 2s infinite alternate; }
+@keyframes shakeBubble { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
+@keyframes floatBubble { from { transform: translateY(0); } to { transform: translateY(-8px); } }
 
-/* 第8页：寓意 */
-.moral-board {
-    background: #fff;
-    border: 8px solid var(--c-dark-blue);
-    border-radius: 40px;
-    padding: 50px 60px;
-    position: relative;
-    box-shadow: 12px 12px 0 var(--c-green), 0 20px 40px rgba(0,0,0,0.2);
-    z-index: 5;
-}
+.hare-bubble::after { bottom: 100%; left: 20%; border-bottom-color: var(--c-text-dark); }
+.tortoise-bubble::after { bottom: 100%; right: 20%; border-bottom-color: var(--c-text-dark); }
 
-.slide.active .moral-board {
-    animation: cardPop 1s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-}
-
-.moral-board h2 {
-    font-size: clamp(2.2rem, 5vw, 3.2rem);
-    color: var(--c-orange);
-    text-shadow: 2px 2px 0 var(--c-dark-blue);
-    margin-bottom: 30px;
-    border-bottom: 4px dashed var(--c-lake-blue);
-    padding-bottom: 20px;
-}
-
-.lesson p {
-    font-size: clamp(1.5rem, 3.5vw, 2rem);
-    line-height: 2;
-    color: var(--c-dark-blue);
+/* ================= 第三幕：挑战 ================= */
+.dialogue-stage { display: flex; align-items: center; justify-content: space-between; width: 90%; max-width: 800px; margin-top: 10vh; }
+.actor { display: flex; flex-direction: column; align-items: center; position: relative; }
+.char-left, .char-right { width: clamp(110px, 18vw, 150px); }
+.vs-badge {
+    font-size: clamp(3rem, 6vw, 5rem);
+    color: var(--c-curtain);
     font-weight: bold;
+    text-shadow: 4px 4px 0 var(--c-gold), 6px 6px 0 var(--c-text-dark);
+    opacity: 0;
 }
+.bubble.dramatic { border-color: var(--c-curtain); color: var(--c-curtain); transform-origin: bottom right; margin-bottom: 20px; }
+.bubble.dramatic::after { top: 100%; right: 20%; border-top-color: var(--c-curtain); }
+.bubble.calm { border-color: var(--c-forest-green); color: var(--c-forest-green); margin-bottom: 20px; }
+.bubble.calm::after { top: 100%; left: 20%; border-top-color: var(--c-forest-green); }
+.slide.active .shout { animation: dramaticShout 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes dramaticShout { 0% { opacity: 0; transform: scale(0.2) rotate(-15deg); } 100% { opacity: 1; transform: scale(1.1) rotate(-5deg); } }
+.tension-shadows { background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.6) 100%); }
 
-.lesson .highlight {
-    font-size: clamp(2rem, 4.5vw, 2.8rem);
-    color: var(--c-red);
-    margin-top: 30px;
-    text-shadow: 2px 2px 0px rgba(255,255,255,1), 4px 4px 0px var(--c-orange);
-    display: inline-block;
-    padding: 10px 20px;
-    background: var(--c-beige);
+/* ================= 第四幕/第六幕：比赛与冲刺 ================= */
+.race-track, .approaching-track { width: 100%; height: 100%; position: relative; }
+.diagonal-layout { transform: rotate(-3deg); transform-origin: center; }
+.racer { position: absolute; bottom: 20%; display: flex; align-items: flex-end; }
+.fast-racer { left: 10%; z-index: 3; }
+.slow-racer { left: 5%; z-index: 2; bottom: 15%; }
+.moving-fast { width: 140px; }
+.moving-slow { width: 100px; }
+
+.slide.active .fast-racer { animation: runAcross 4s linear infinite; }
+.slide.active .slow-racer { animation: crawlAcross 12s linear infinite; }
+@keyframes runAcross { 0% { left: -20%; } 100% { left: 120%; } }
+@keyframes crawlAcross { 0% { left: -10%; } 100% { left: 90%; } }
+
+.css-speed-lines {
+    position: absolute;
+    top: 50%; right: 100%;
+    width: 80px; height: 4px;
+    background: repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.8) 10px, rgba(255,255,255,0.8) 20px);
+    opacity: 0;
+}
+.slide.active .css-speed-lines { animation: speedLines 0.5s infinite; }
+@keyframes speedLines { 0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(-40px); opacity: 0; } }
+
+.css-dust-cloud {
+    position: absolute; bottom: 0; right: 80%;
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    box-shadow: -20px -10px 0 10px rgba(255,255,255,0.6), -40px 5px 0 5px rgba(255,255,255,0.4);
+    opacity: 0;
+}
+.slide.active .css-dust-cloud { animation: dustPuff 0.8s infinite; }
+@keyframes dustPuff { 0% { opacity: 0.8; transform: scale(0.5); } 100% { opacity: 0; transform: scale(1.5) translateX(-50px); } }
+
+.css-sweat-drops .drop {
+    position: absolute; top: -10px; right: -10px;
+    width: 10px; height: 15px;
+    background: var(--c-sky-blue);
+    border-radius: 0 50% 50% 50%;
+    transform: rotate(45deg);
+    opacity: 0;
+}
+.slide.active .drop.d1 { animation: sweatDrip 1.5s infinite; }
+.slide.active .drop.d2 { top: 5px; right: -20px; animation: sweatDrip 1.5s infinite 0.5s; }
+@keyframes sweatDrip { 0% { opacity: 1; transform: translateY(0) rotate(45deg); } 100% { opacity: 0; transform: translateY(20px) rotate(45deg); } }
+
+.cheer-signboard { background: var(--c-orange); color: #fff; padding: 10px 20px; border-radius: 10px; border: 3px solid #fff; font-size: 1.5rem; font-weight: bold; position: absolute; bottom: 10%; right: 10%; box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
+.slide-in-bottom { animation: slideUp 0.8s ease forwards; opacity: 0; transform: translateY(50px); }
+@keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+.finish-line-far { position: absolute; top: 30%; right: 20%; width: 60px; filter: blur(1px); }
+.approaching-tortoise { position: absolute; bottom: 15%; left: 30%; width: 140px; z-index: 2; }
+.focus-light { background: radial-gradient(circle at 60% 60%, transparent 20%, rgba(0,0,0,0.6) 100%); }
+
+/* ================= 第五幕：睡觉近景 ================= */
+.close-up-scene { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+.tree-shade-container { position: relative; display: flex; flex-direction: column; align-items: center; }
+.css-tree-trunk {
+    width: 120px; height: 100vh; position: absolute; left: -100px; top: -20vh;
+    background: linear-gradient(to right, #4A2E15, #6B4226, #4A2E15);
     border-radius: 20px;
-    border: 3px solid var(--c-red);
-    transform: rotate(-2deg);
+    z-index: -1;
 }
-.slide.active .highlight.glow { animation: highlightPulse 2s infinite alternate; }
-
-@keyframes highlightPulse {
-    0% { transform: rotate(-2deg) scale(1); box-shadow: 0 0 10px rgba(231,76,60,0.4); }
-    100% { transform: rotate(-2deg) scale(1.05); box-shadow: 0 0 25px rgba(231,76,60,0.8); }
+.css-tree-trunk::after {
+    content: ''; position: absolute; top: 0; left: -100px; width: 400px; height: 300px;
+    background: var(--c-forest-green); border-radius: 50%; filter: blur(20px); opacity: 0.6;
 }
+.sleeping-spot { position: relative; }
+.sleeping-hare { width: clamp(160px, 30vw, 240px); filter: drop-shadow(0 15px 10px rgba(0,0,0,0.6)); }
+.sleep-bubble { position: absolute; top: -100px; left: 150px; border-color: var(--c-night-blue); background: var(--c-cream); }
+.sleep-bubble::after { bottom: -12px; left: 20px; border-top-color: var(--c-night-blue); }
 
-.moral-board .cheer {
-    position: absolute;
-    bottom: -60px;
-    right: -40px;
-    width: clamp(120px, 20vw, 160px);
-    z-index: 10;
-}
-.slide.active .cheer.big-smile { animation: bouncyHare 2s infinite; }
+.zzz-marks { position: absolute; top: -40px; left: -20px; color: var(--c-sky-blue); font-size: 1.5rem; font-weight: bold; }
+.zzz-marks span { display: inline-block; opacity: 0; }
+.slide.active .z1 { animation: floatZ 2s infinite; }
+.slide.active .z2 { animation: floatZ 2s infinite 0.6s; font-size: 1.2rem; }
+.slide.active .z3 { animation: floatZ 2s infinite 1.2s; font-size: 1rem; }
+@keyframes floatZ { 0% { opacity: 0; transform: translateY(0) scale(0.8); } 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(-30px) scale(1.5) translateX(20px); } }
 
-.final-applause {
-    position: absolute;
-    top: -25px;
-    left: 10%;
-    background: var(--c-lake-blue);
-    border-color: var(--c-dark-blue);
-    transform: rotate(-5deg);
-    animation: none;
-}
+.leaf-shadows { background: repeating-linear-gradient(45deg, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 20px, transparent 20px, transparent 40px); opacity: 0.3; mix-blend-mode: multiply; }
+.overlay-dark { background: radial-gradient(circle at 50% 70%, transparent 20%, rgba(10,25,47,0.8) 100%); }
 
-/* UI 控制层 */
+/* ================= 第七幕：结局反转 ================= */
+.celebration-stage { display: flex; justify-content: center; align-items: flex-end; width: 100%; height: 50vh; position: relative; gap: 50px; }
+.winner-podium { position: relative; z-index: 5; text-align: center; }
+.bg-finish { width: 120px; opacity: 0.4; margin-bottom: -20px; }
+.winner { width: clamp(140px, 25vw, 200px); position: relative; z-index: 2; }
+.loser-corner { position: relative; z-index: 3; align-self: flex-end; margin-bottom: 30px; }
+.shocked-hare { width: clamp(120px, 20vw, 160px); filter: grayscale(0.2) drop-shadow(0 5px 5px rgba(0,0,0,0.4)); }
+.panic-bubble { position: absolute; top: -80px; left: -20px; border-color: var(--c-curtain); color: var(--c-curtain); min-width: 180px; }
+.panic-bubble::after { bottom: -12px; right: 40px; border-top-color: var(--c-curtain); }
+.slide.active .explode { animation: explosionPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes explosionPop { 0% { opacity: 0; transform: scale(0.1) rotate(-20deg); } 80% { transform: scale(1.2) rotate(5deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
+
+.css-confetti-layer { position: absolute; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden; }
+.confetti-piece { position: absolute; width: 15px; height: 25px; top: -30px; opacity: 0; }
+.c1 { background: var(--c-gold); left: 20%; animation: fallDown 3s linear infinite; }
+.c2 { background: var(--c-curtain); left: 40%; width: 20px; height: 20px; border-radius: 50%; animation: fallDown 4s linear infinite 0.5s; }
+.c3 { background: var(--c-sky-blue); left: 60%; animation: fallDown 3.5s linear infinite 1s; }
+.c4 { background: var(--c-forest-green); left: 80%; width: 10px; height: 10px; border-radius: 50%; animation: fallDown 2.5s linear infinite 0.2s; }
+.c5 { background: var(--c-orange); left: 50%; animation: fallDown 4s linear infinite 1.5s; }
+@keyframes fallDown { 0% { opacity: 1; transform: translateY(-20px) rotate(0deg); } 100% { opacity: 0; transform: translateY(100vh) rotate(360deg); } }
+
+/* ================= 第八幕：寓意 ================= */
+.moral-board-scene { justify-content: center; align-items: center; }
+.center-spotlight { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 80vw; height: 100%; background: radial-gradient(ellipse at top, rgba(255, 255, 220, 0.5) 0%, transparent 70%); z-index: 0; mix-blend-mode: overlay; pointer-events: none; }
+.wooden-billboard.large { width: 80%; max-width: 800px; padding: 60px 40px; z-index: 2; }
+.moral-title { font-size: clamp(2.5rem, 5vw, 4rem); color: var(--c-gold); text-shadow: 2px 2px 0 var(--c-wood-dark); margin-bottom: 30px; border-bottom: 4px dashed rgba(255,255,255,0.3); padding-bottom: 20px; }
+.lesson-text p { font-size: clamp(1.5rem, 3.5vw, 2.5rem); line-height: 1.8; }
+.highlight-text { display: inline-block; margin-top: 30px; padding: 10px 30px; background: var(--c-curtain); color: #fff; border-radius: 15px; border: 4px solid var(--c-gold); }
+.slide.active .pulse-glow { animation: glowingText 2s infinite alternate; }
+@keyframes glowingText { from { box-shadow: 0 0 10px var(--c-curtain); transform: scale(1); } to { box-shadow: 0 0 30px var(--c-gold); transform: scale(1.05); } }
+
+.moral-mascot { position: absolute; bottom: -60px; right: -40px; width: clamp(120px, 20vw, 160px); z-index: 3; }
+.applause-sign { position: absolute; top: -30px; left: -20px; background: var(--c-sky-blue); color: #fff; padding: 10px 20px; border-radius: 10px; border: 3px solid #fff; font-size: 1.5rem; font-weight: bold; transform: rotate(-10deg); box-shadow: 4px 4px 0 var(--c-shadow); }
+
+/* ================= UI 控制层 ================= */
 #ui-layer {
     position: absolute;
     top: 0;
@@ -704,7 +497,7 @@ img[src*='assets/'] {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 100;
+    z-index: 200;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -713,80 +506,83 @@ img[src*='assets/'] {
 .progress-container {
     width: 100%;
     height: 12px;
-    background: rgba(28, 40, 65, 0.4);
-    border-bottom: 2px solid rgba(255,255,255,0.2);
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(255,255,255,0.1);
 }
 
 .progress-bar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, var(--c-orange-light), var(--c-orange));
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 15px var(--c-orange), inset 0 -3px 0 rgba(0,0,0,0.1);
+    background: linear-gradient(90deg, var(--c-gold), var(--c-orange));
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 15px var(--c-gold);
     border-radius: 0 6px 6px 0;
 }
 
 .controls {
     pointer-events: auto;
-    padding: 15px 30px;
+    padding: 20px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to top, rgba(28, 40, 65, 0.9), transparent);
-    padding-bottom: max(25px, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    padding-bottom: max(30px, env(safe-area-inset-bottom));
 }
 
-/* 绘本风立体按钮 */
 .nav-btn, .icon-btn {
-    background: #fff;
-    border: 4px solid var(--c-dark-blue);
-    color: var(--c-dark-blue);
-    width: 55px;
-    height: 55px;
+    background: var(--c-cream);
+    border: 4px solid var(--c-wood-dark);
+    color: var(--c-wood-dark);
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: bold;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 0 var(--c-dark-blue), 0 10px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 6px 0 var(--c-wood-dark), 0 10px 15px rgba(0,0,0,0.5);
     transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .nav-btn:active, .icon-btn:active {
     transform: translateY(6px);
-    box-shadow: 0 0 0 var(--c-dark-blue), 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 0 var(--c-wood-dark), 0 2px 5px rgba(0,0,0,0.5);
 }
 
 .nav-btn:hover, .icon-btn:hover {
     background: var(--c-orange);
     color: #fff;
+    border-color: #fff;
 }
 
 .page-indicator {
-    color: var(--c-dark-blue);
+    color: var(--c-cream);
     font-weight: bold;
-    font-size: 1.3rem;
-    background: #fff;
-    padding: 8px 25px;
+    font-size: 1.4rem;
+    background: var(--c-wood-dark);
+    padding: 10px 30px;
     border-radius: 30px;
-    border: 4px solid var(--c-dark-blue);
-    box-shadow: 0 4px 0 var(--c-dark-blue);
+    border: 4px solid var(--c-wood-light);
+    box-shadow: 0 6px 0 var(--c-wood), 0 10px 15px rgba(0,0,0,0.5);
 }
 
-/* 响应式调整 */
+/* ================= 响应式调整 ================= */
 @media (max-width: 768px) {
-    #presentation-container { box-shadow: inset 0 0 20px rgba(0,0,0,0.1), inset 0 0 0 6px #fff, inset 0 0 0 10px var(--c-dark-blue); }
-    .character-card { width: 90%; min-width: unset; padding: 30px 20px 20px; }
-    .dramatic-scene .dialogue-stage { flex-direction: column; gap: 40px; }
-    .dramatic::after { top: -20px; left: 50%; transform: translateX(-50%); border-right-color: transparent; border-bottom-color: var(--c-red); }
-    .calm::after { bottom: -20px; right: 50%; top: auto; transform: translateX(50%); border-left-color: transparent; border-top-color: var(--c-lake-blue); }
-    .dramatic, .calm { margin: 10px 0; font-size: 1.2rem; }
+    .curtain-left, .curtain-right { width: 4vw; min-width: 20px; }
+    .curtain-top { height: 5vh; min-height: 25px; }
+    .midground { padding: 5vh 5vw; }
+    .character-showcase { flex-direction: column; align-items: center; gap: 20px; }
+    .character-card { width: 85%; padding: 20px; }
+    .dialogue-stage { flex-direction: column; gap: 40px; }
+    .vs-badge { margin: -10px 0; }
     .controls { padding: 15px 20px; }
-    .nav-btn, .icon-btn { width: 48px; height: 48px; font-size: 1.3rem; border-width: 3px; }
-    .race-track, .race-scene { height: 300px; }
-    .narration-board { font-size: 1.1rem; padding: 10px 20px; margin-bottom: 20px; border-width: 3px; }
-    .moral-board { padding: 30px 20px; border-width: 5px; border-radius: 25px; }
-    .cover h1 { letter-spacing: 2px; text-shadow: 3px 3px 0px #fff, 5px 5px 0px var(--c-orange); }
+    .nav-btn, .icon-btn { width: 50px; height: 50px; font-size: 1.4rem; border-width: 3px; }
+    .page-indicator { font-size: 1.2rem; padding: 8px 20px; border-width: 3px; }
+    .wooden-board, .wooden-sign, .wooden-billboard { border-width: 4px; }
+    .wooden-billboard.large { padding: 40px 20px; }
+    .celebration-stage { flex-direction: column; align-items: center; gap: 20px; }
+    .loser-corner { align-self: center; margin-bottom: 0; }
+    .css-tree-trunk { left: -50px; }
 }
