@@ -11,29 +11,35 @@
         <div id="slides-wrapper">
             <!-- 第1页：封面 -->
             <section class="slide active" id="slide-1">
-                <img src="assets/forest-stage.svg" class="bg-layer" alt="森林舞台">
+                <img src="assets/forest-stage.svg" class="bg-layer parallax-bg" alt="森林舞台">
                 <div class="content cover">
-                    <h1 class="title">龟兔赛跑</h1>
-                    <p class="subtitle">经典童话绘本剧场</p>
-                    <div class="characters-preview">
-                        <img src="assets/hare-proud.svg" class="hero-hare" alt="兔子">
-                        <img src="assets/tortoise-steady.svg" class="hero-tortoise" alt="乌龟">
+                    <div class="title-board">
+                        <h1 class="title">龟兔赛跑</h1>
+                        <p class="subtitle">🌲 经典童话绘本剧场 🌲</p>
                     </div>
+                    <div class="characters-preview">
+                        <img src="assets/hare-proud.svg" class="hero-hare bounce" alt="骄傲的兔子">
+                        <img src="assets/tortoise-happy.svg" class="hero-tortoise sway" alt="开心的乌龟">
+                    </div>
+                    <div class="decoration stars">✨ ⭐ ✨</div>
                 </div>
             </section>
 
             <!-- 第2页：角色介绍 -->
             <section class="slide" id="slide-2">
                 <div class="content theater-layout">
-                    <div class="character-card">
+                    <div class="narration-board top">今天，舞台上来了两位明星！</div>
+                    <div class="character-card pop-in">
+                        <div class="spotlight"></div>
                         <img src="assets/hare-proud.svg" alt="骄傲的兔子">
-                        <h2>飞毛腿兔子</h2>
-                        <div class="bubble hare-bubble">我可是森林里跑得最快的！</div>
+                        <h2>飞毛腿 🐰</h2>
+                        <div class="bubble hare-bubble shake">“我可是森林里跑得最快的！”</div>
                     </div>
-                    <div class="character-card">
+                    <div class="character-card pop-in delay">
+                        <div class="spotlight"></div>
                         <img src="assets/tortoise-steady.svg" alt="稳重的乌龟">
-                        <h2>慢吞吞乌龟</h2>
-                        <div class="bubble tortoise-bubble">我虽然慢，但我很踏实。</div>
+                        <h2>慢吞吞 🐢</h2>
+                        <div class="bubble tortoise-bubble float">“我虽然慢，但我很踏实。”</div>
                     </div>
                 </div>
             </section>
@@ -42,12 +48,16 @@
             <section class="slide" id="slide-3">
                 <img src="assets/forest-stage.svg" class="bg-layer" alt="森林舞台">
                 <div class="content dramatic-scene">
-                    <h2 class="scene-title">森林挑战赛</h2>
+                    <div class="narration-board">一场大比赛即将开始……</div>
                     <div class="dialogue-stage">
-                        <img src="assets/hare-proud.svg" class="char-left" alt="兔子">
-                        <div class="bubble dramatic">敢和我比跑步吗？小慢龟！</div>
-                        <div class="bubble calm">好啊，比就比！</div>
-                        <img src="assets/tortoise-steady.svg" class="char-right" alt="乌龟">
+                        <div class="actor left-actor">
+                            <img src="assets/hare-proud.svg" class="char-left" alt="兔子">
+                            <div class="bubble dramatic shout">敢和我比跑步吗？小慢龟！</div>
+                        </div>
+                        <div class="actor right-actor">
+                            <div class="bubble calm firm">好啊，比就比！</div>
+                            <img src="assets/tortoise-steady.svg" class="char-right" alt="乌龟">
+                        </div>
                     </div>
                 </div>
             </section>
@@ -55,11 +65,17 @@
             <!-- 第4页：比赛过程1 - 兔子领先 -->
             <section class="slide" id="slide-4">
                 <div class="content race-track">
-                    <h2>比赛开始！</h2>
-                    <p class="narration">兔子像风一样冲了出去，把乌龟远远甩在后面。</p>
-                    <div class="race-animation">
-                        <img src="assets/hare-proud.svg" class="moving-fast" alt="飞奔的兔子">
-                        <img src="assets/tortoise-steady.svg" class="moving-slow" alt="慢慢爬的乌龟">
+                    <div class="applause-board">观众：加油！加油！👏</div>
+                    <div class="narration-board">比赛开始！兔子像风一样冲了出去。</div>
+                    <div class="race-animation zoom-pan">
+                        <div class="racer fast-racer">
+                            <img src="assets/hare-proud.svg" class="moving-fast" alt="飞奔的兔子">
+                            <div class="dust-cloud">💨</div>
+                        </div>
+                        <div class="racer slow-racer">
+                            <img src="assets/tortoise-steady.svg" class="moving-slow" alt="慢慢爬的乌龟">
+                            <div class="sweat-drop">💦</div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -68,10 +84,10 @@
             <section class="slide" id="slide-5">
                 <img src="assets/forest-stage.svg" class="bg-layer dimmed" alt="安静的森林">
                 <div class="content">
-                    <h2>骄傲的梦乡</h2>
-                    <div class="scene-focus">
-                        <img src="assets/hare-sleeping.svg" class="sleeping-hare" alt="睡觉的兔子">
-                        <div class="bubble zzz">Zzz... 乌龟还早着呢，我先睡一觉。</div>
+                    <div class="narration-board night-mode">半路上，骄傲的兔子觉得太轻松了……</div>
+                    <div class="scene-focus tree-shade">
+                        <img src="assets/hare-sleeping.svg" class="sleeping-hare breathe" alt="睡觉的兔子">
+                        <div class="bubble zzz float-up">Zzz... 乌龟还早着呢，睡个午觉。</div>
                     </div>
                 </div>
             </section>
@@ -79,38 +95,44 @@
             <!-- 第6页：冲刺反转 - 乌龟接近终点 -->
             <section class="slide" id="slide-6">
                 <div class="content">
-                    <h2>坚持不懈</h2>
-                    <p class="narration">乌龟一步一步，慢慢地、稳稳地向前爬……</p>
-                    <div class="race-scene">
-                        <img src="assets/tortoise-steady.svg" class="approaching-finish" alt="接近终点的乌龟">
+                    <div class="narration-board">可是，乌龟一步一步，稳稳地向前爬……</div>
+                    <div class="race-scene effort-scene">
+                        <img src="assets/tortoise-steady.svg" class="approaching-finish effort-move" alt="努力的乌龟">
                         <img src="assets/finish-line.svg" class="finish-line" alt="终点线">
+                        <div class="cheer-props float-up">🎉 观众：乌龟快到了！🎉</div>
                     </div>
                 </div>
             </section>
 
             <!-- 第7页：结局 -->
             <section class="slide" id="slide-7">
-                <div class="content">
-                    <h2>爆冷大结局！</h2>
+                <div class="content climax">
+                    <div class="narration-board big-news">爆冷大结局！乌龟赢啦！</div>
                     <div class="celebration-scene">
                         <img src="assets/finish-line.svg" class="bg-finish" alt="终点">
-                        <img src="assets/tortoise-steady.svg" class="winner" alt="胜利的乌龟">
-                        <img src="assets/hare-proud.svg" class="shocked-hare" alt="震惊的兔子">
-                        <div class="bubble panic-bubble">哎呀！我怎么睡过头了！</div>
+                        <img src="assets/tortoise-happy.svg" class="winner jump-joy" alt="开心的乌龟">
+                        <div class="loser-reaction">
+                            <img src="assets/hare-surprised.svg" class="shocked-hare tremble" alt="震惊的兔子">
+                            <div class="bubble panic-bubble explode">哎呀！我怎么睡过头了？！😱</div>
+                        </div>
                     </div>
+                    <div class="confetti">🎊 🎊 🎊</div>
                 </div>
             </section>
 
             <!-- 第8页：寓意页 -->
             <section class="slide" id="slide-8">
-                <div class="content moral-board">
-                    <h2>故事告诉我们……</h2>
-                    <div class="lesson">
-                        <p>骄傲使人落后，</p>
-                        <p>虚心使人进步。</p>
-                        <p class="highlight">坚持到底就是胜利！</p>
+                <div class="content moral-board stage-light">
+                    <div class="board-inner">
+                        <h2>🌟 故事告诉我们 🌟</h2>
+                        <div class="lesson">
+                            <p>骄傲使人落后，</p>
+                            <p>虚心使人进步。</p>
+                            <p class="highlight glow">坚持到底就是胜利！</p>
+                        </div>
+                        <img src="assets/tortoise-happy.svg" class="cheer big-smile" alt="乌龟开心">
+                        <div class="applause-board final-applause">👏👏 谢谢观看 👏👏</div>
                     </div>
-                    <img src="assets/tortoise-steady.svg" class="cheer" alt="乌龟加油">
                 </div>
             </section>
         </div>
